@@ -1,4 +1,4 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
+import { takeEvery, put, call, all } from 'redux-saga/effects';
 import ShopActionTypes from './shop.types';
 
 import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
@@ -17,9 +17,14 @@ export function* fetchCollectionsAsync() {
         console.log(error);
         yield put(fetchCollectionsFailur(error.message));
     }
-};
+}
 
 export function* fetchCollectionsStart() {
     yield takeEvery(ShopActionTypes.FETCH_COLLECTION_START, fetchCollectionsAsync);
-};
+}
 
+export function* shopSagas() {
+    yield all([
+        call(fetchCollectionsStart),
+    ]);
+}
